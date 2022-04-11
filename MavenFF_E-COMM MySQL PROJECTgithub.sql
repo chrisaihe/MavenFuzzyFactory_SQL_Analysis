@@ -1,7 +1,7 @@
 
 
 /* 1. Pull monthly trends for gsearch sessions and orders 
-so that the growth there can bed showcase */
+so that the growth there can be showcased */
 
 SELECT 
     MONTH(website_sessions.created_at) AS months,
