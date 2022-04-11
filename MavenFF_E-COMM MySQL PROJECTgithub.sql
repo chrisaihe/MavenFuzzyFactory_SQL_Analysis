@@ -1,7 +1,7 @@
+
+
 /* 1. Pull monthly trends for gsearch sessions and orders 
 so that the growth there can bed showcase */
-
-use mavenfuzzyfactory;
 
 SELECT 
     MONTH(website_sessions.created_at) AS months,
@@ -16,8 +16,11 @@ FROM
 WHERE
     website_sessions.utm_source = 'gsearch'
         AND website_sessions.created_at < '2012-11-27'
-GROUP BY 1
-;
+GROUP BY 1;
+
+/* ANALYSIS: the query shows the upward trend of the conversion rates of sessions to orders
+from March to December */
+
 
 /* 2. Query to see a similar monthly trend for gsearch, but this time splitting out nonbrand
 and brand campaigns separately to see if brand campaign is picking up at all. */
@@ -42,6 +45,8 @@ WHERE
 	AND website_sessions.created_at < '2012-11-27'
 GROUP BY 1;
 
+/* ANALYSIS: brand utm_campaign sessions and orders have picked up steam since the early months of March and April */
+
 
 /* 3. Let's dive into nonbrand, and pull monthly sessions and orders split by device type.*/
 
@@ -65,10 +70,14 @@ WHERE   website_sessions.utm_source = 'gsearch'
         AND website_sessions.created_at < '2012-11-27'
 GROUP BY 1;
 
+/* ANALYSIS: desktop as a device type has been the platform getting most of the traffic which suggests
+that the mobile interface isn't attracting traffic or the demographic of our clients make use of desktop computers
+rather than mobile phones when visiting our website. */
 
-/* 4. Pull monthly trends for gsearch, alongside monthly trends for each of our other channels? */
 
--- first, finding the various utm sources and referers to see the traffic we're getting
+/* 4. Pull monthly trends for gsearch, alongside monthly trends for each of the other channels? */
+
+-- first, finding the various utm sources and referers to see the traffic been gotten
 
 SELECT DISTINCT
     utm_source, 
@@ -76,6 +85,8 @@ SELECT DISTINCT
     http_referer
 FROM    website_sessions
 WHERE   created_at < '2012-11-27';
+
+-- use the above result gotten as parameters in the case statements below
 
 SELECT 
     -- YEAR(website_sessions.created_at) AS yr,
@@ -92,11 +103,16 @@ FROM
     website_sessions
         LEFT JOIN
     orders 
-    ON orders.website_session_id = website_sessions.website_session_id
+    ON 
+    orders.website_session_id = website_sessions.website_session_id
 WHERE
     website_sessions.created_at < '2012-11-27'
 GROUP BY 1
 ORDER BY 1 ASC;
+
+/* ANALYSIS: Amongst the other channels, bsearch makes up the majority of traffic followed by organic search and lastly direct type in. */
+
+
 
 /* 5. Tell the story of our website performcance improvements over the course of the first 8 months.
 Pull session to order conversion rates by month */
@@ -111,7 +127,11 @@ FROM
     website_sessions
         LEFT JOIN
     orders 
-    ON orders.website_session_id = website_sessions.website_session_id
+    ON 
+    orders.website_session_id = website_sessions.website_session_id
 WHERE
     website_sessions.created_at < '2012-11-27'
 GROUP BY 1;
+
+/* ANALYSIS: Website performance dipped after the first month and recorded low numbers in the succeeding month as well.alter
+However, it picked up in the fourth month and took a positive jump in months 7 & 8. */
